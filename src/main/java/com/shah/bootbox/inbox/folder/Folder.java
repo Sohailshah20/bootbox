@@ -15,7 +15,7 @@ public class Folder {
     @CassandraType(type = CassandraType.Name.TEXT)
     private String color;
 
-    public String getId() {
+    public String getKey() {
         return id;
     }
 
@@ -28,7 +28,7 @@ public class Folder {
     public Folder() {
     }
 
-    public void setId(String id) {
+    public void setKey(String id) {
         this.id = id;
     }
 

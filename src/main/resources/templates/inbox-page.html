@@ -36,11 +36,6 @@
           grid-area: content;
         }
 
-        aside {
-          grid-area: side;
-          margin-right: 0.5rem;
-        }
-
         footer {
           grid-area: footer;
         }
@@ -56,18 +51,30 @@
     </header>
 
     <nav>
-        <div th:insert="components/folder-list :: folder-list (panelName = 'Folders', folders = ${defaultFolders})"></div>
-        <div th:insert="components/folder-list :: folder-list (panelName = 'User Folder', folders = ${userFolders})"></div>
+        <div class="card">
+            <div th:insert="components/folder-list :: folder-list (panelName = 'Folders', folders = ${defaultFolders})"></div>
+            <div th:insert="components/folder-list :: folder-list (panelName = 'User Folder', folders = ${userFolders})"></div>
+        </div>
     </nav>
 
     <main>
-        <h1>Email List</h1>
+        <div class="card">
+            <div class="card-header">Inbox</div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a th:each="message : ${emailList}"
+                       href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1" th:text="${message.subject}">List group item heading</h5>
+                            <small th:text="${message.ageTimeStamp}">3 days ago</small>
+                        </div>
+                        <p class="mb-1" th:text="${message.to}">Some placeholder content in a paragraph.</p>
+                        <small>And some small print.</small>
+                    </a>
+                </div>
+            </div>
+        </div>
     </main>
-
-    <aside>
-        <!-- Sidebar / Ads -->
-    </aside>
-
     <footer>
         <!-- Footer content -->
     </footer>
