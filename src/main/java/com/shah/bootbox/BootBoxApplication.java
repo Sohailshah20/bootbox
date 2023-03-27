@@ -1,20 +1,12 @@
 package com.shah.bootbox;
 
-import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.shah.bootbox.config.DataStaxAstraProperties;
-import com.shah.bootbox.emaillistitem.EmailListItem;
-import com.shah.bootbox.emaillistitem.EmailListItemKey;
-import com.shah.bootbox.emaillistitem.EmailListItemRepository;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.cassandra.CqlSessionBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 @SpringBootApplication
 public class BootBoxApplication {
