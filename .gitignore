@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 mvn/
+
+secure-connect.zip
 ### STS ###
 .apt_generated
 .classpath

@@ -1,23 +1,23 @@
 package com.shah.bootbox;
 
+import com.shah.bootbox.config.DataStaxAstraProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.boot.autoconfigure.cassandra.CqlSessionBuilderCustomizer;
+import org.springframework.context.annotation.Bean;
+
+import java.nio.file.Path;
 
 @SpringBootApplication
-@RestController
 public class BootBoxApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(BootBoxApplication.class, args);
     }
 
-    @RequestMapping("/user")
-    public String user(@AuthenticationPrincipal OAuth2User oAuth2User) {
-        return oAuth2User.getAttribute("name");
+    @Bean
+    public CqlSessionBuilderCustomizer sessionBuilderCustomizer(DataStaxAstraProperties astraProperties) {
+        Path bundle = astraProperties.getSecureConnectBundle().toPath();
+        return builder -> builder.withCloudSecureConnectBundle(bundle);
     }
-
 }

@@ -1,4 +1,4 @@
-package com.shah.bootbox;
+package com.shah.bootbox.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

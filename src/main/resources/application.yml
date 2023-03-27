@@ -1,8 +1,31 @@
 spring:
+  application:
+    name: bootbox
   security:
     oauth2:
       client:
         registration:
           github:
-            clientId: Iv1.4cb4468c4a045da2
-            clientSecret: 0f567792ec6ec0d4e177f096ca768cba7100b33a
+            client-id: Iv1.4cb4468c4a045da2
+            client-secret: 0f567792ec6ec0d4e177f096ca768cba7100b33a
+  cassandra:
+    keyspace-name: main
+    username: rfiyNaWOqLXSRndiAstabTxh
+    password: 9B.qFHM_RyDPF83H0.AXHfsJF0hESwSZswLBbe.ZAmMbuWDL.RpxLyqBu46HOFFPPYl_oWdtjK1nAZ2tWZ.37Yu1DvBbgEG.JWMJIND7pSEP2HD.x2s3aLEukOGHp4U-
+    schema-action: recreate_drop_unused
+    request:
+      timeout: 10s
+    connection:
+      connect-timeout: 10s
+      init-query-timeout: 10s
+
+datastax.astra:
+  secure-connect-bundle: secure-connect.zip
+
+astra:
+  db:
+    id: cdb6a9f1-ade2-491d-b0a1-b9f10cdc3ac9-1
+    region: asia-south1
+    keyspace: <astra-db-keyspace-name>
+    application:
+      token: AstraCS:rfiyNaWOqLXSRndiAstabTxh:e3b45b1350e24164077378652204da6adda92e142c6cdd45a01779ae5b3179b0
