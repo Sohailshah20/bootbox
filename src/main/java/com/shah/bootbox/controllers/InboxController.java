@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -39,7 +41,11 @@ public class InboxController {
     }
 
     @GetMapping("/")
-    public String homePage(@AuthenticationPrincipal OAuth2User principal, Model model) {
+    public String homePage(
+            @RequestParam(required = false) String folder,
+            @AuthenticationPrincipal OAuth2User principal,
+            Model model
+    ) {
         if (principal == null || !StringUtils.hasText(principal.getAttribute("login"))) {
             return "index";
         }
@@ -52,23 +58,27 @@ public class InboxController {
         model.addAttribute("userFolders", userFolders);
 
         List<Folder> defaultFolders = folderService.getDefaultFolders(id);
-        model.addAttribute("defaultFolders",defaultFolders);
+        model.addAttribute("defaultFolders", defaultFolders);
 
         //fetching messages
-        String folderLabel = "Inbox";
-        List<EmailListItem> emailList = emailListItemRepository.findAllByKey_IdAndKey_Label(id, folderLabel);
-        if (emailList.isEmpty()){
+        if (!StringUtils.hasText(folder)){
+            folder = "Inbox";
+        }
+
+        List<EmailListItem> emailList = emailListItemRepository.findAllByKey_IdAndKey_Label(id, folder);
+        if (emailList.isEmpty()) {
             System.out.println("list is empty");
         }
 
         PrettyTime prettyTime = new PrettyTime();
 
-        emailList.stream().forEach(emailItem ->{
+        emailList.stream().forEach(emailItem -> {
             UUID timeUUID = emailItem.getKey().getTimeUUID();
             Date date = new Date(Uuids.unixTimestamp(timeUUID));
             emailItem.setAgeTimeStamp(prettyTime.format(date));
         });
 
+        model.addAttribute("folderName", folder);
         model.addAttribute("emailList", emailList);
 
 
@@ -76,7 +86,7 @@ public class InboxController {
     }
 
 
-    public void init(String id){
+    public void init(String id) {
         for (int i = 0; i < 5; i++) {
             EmailListItemKey key = new EmailListItemKey();
             key.setId(id);
@@ -86,7 +96,7 @@ public class InboxController {
             EmailListItem item = new EmailListItem();
             item.setKey(key);
             item.setTo(Arrays.asList("SohailShah"));
-            item.setSubject("Subject "+ i);
+            item.setSubject("Subject " + i);
             item.setUnread(true);
 
             emailListItemRepository.save(item);
