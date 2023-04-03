@@ -29,6 +29,8 @@ public class InboxController {
     private final FolderService folderService;
     private final EmailListItemRepository emailListItemRepository;
 
+
+
     @Autowired
     public InboxController(
             FolderRepository folderRepository,
@@ -59,6 +61,8 @@ public class InboxController {
 
         List<Folder> defaultFolders = folderService.getDefaultFolders(id);
         model.addAttribute("defaultFolders", defaultFolders);
+
+        model.addAttribute("stats", folderService.mapCountToLabel(id));
 
         //fetching messages
         if (!StringUtils.hasText(folder)){

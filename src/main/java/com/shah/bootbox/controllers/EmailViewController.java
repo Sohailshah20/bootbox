@@ -52,6 +52,8 @@ public class EmailViewController {
         List<Folder> defaultFolders = folderService.getDefaultFolders(userId);
         model.addAttribute("defaultFolders", defaultFolders);
 
+        model.addAttribute("stats", folderService.mapCountToLabel(userId));
+
         Optional<Email> optionalEmail = emailRepository.findById(id);
         if (!optionalEmail.isPresent()){
             return "inbox-page";
