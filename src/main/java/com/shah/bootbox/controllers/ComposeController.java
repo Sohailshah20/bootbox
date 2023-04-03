@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,18 +20,19 @@ import org.springframework.web.servlet.ModelAndView;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
 public class ComposeController {
 
-    private final FolderRepository folderRepository;
-    private final FolderService folderService;
+    private  final FolderRepository folderRepository;
+    private  final FolderService folderService;
 
-    private final EmailService emailService;
+    private  final EmailService emailService;
 
-    public ComposeController(FolderRepository folderRepository, FolderService folderService,EmailService emailService) {
+    public ComposeController(FolderRepository folderRepository, FolderService folderService, EmailService emailService) {
         this.folderRepository = folderRepository;
         this.folderService = folderService;
         this.emailService = emailService;
@@ -55,6 +57,8 @@ public class ComposeController {
         List<Folder> defaultFolders = folderService.getDefaultFolders(userId);
         model.addAttribute("defaultFolders", defaultFolders);
 
+        model.addAttribute("stats", folderService.mapCountToLabel(userId));
+
         List<String> uniqueIds = splitIds(to);
         model.addAttribute("toIds", String.join(", ", uniqueIds));
 
@@ -76,19 +80,20 @@ public class ComposeController {
         return uniqueIds;
     }
 
+    @PostMapping("/sendEmail")
     public ModelAndView sendEmail(
-            @AuthenticationPrincipal OAuth2User principal,
-            @RequestBody MultiValueMap<String, String> formData
+            @RequestBody MultiValueMap<String, String> formData,
+            @AuthenticationPrincipal OAuth2User principal
     ) {
         if (principal == null || !StringUtils.hasText(principal.getAttribute("login"))) {
             return new ModelAndView("redirect:/");
         }
 
+        List<String> toUserIds = Collections.singletonList(formData.getFirst("toUserIds"));
+        String subject = formData.getFirst("subject");
+        String body = formData.getFirst("body");
         String from = principal.getAttribute("login");
-        List<String> to = splitIds(formData.getFirst("toIds"));
-        String subject = formData.get("subject");
-        String body = formData.get("body");
-
+        emailService.sendEmail(from,toUserIds,subject,body);
         return new ModelAndView("redirect:/");
 
 
